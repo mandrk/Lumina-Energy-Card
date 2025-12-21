@@ -8,9 +8,9 @@ Animated Home Assistant card that visualises PV, battery, grid, load, and EV ene
 
 - Up to six PV strings and four batteries with automatic aggregation
 - Optional EV charging block with power and SOC readouts
-- Animated SVG flows with dynamic coloration and throttled refresh logic
+- Animated SVG flows with dynamic coloration, speed scaling, and throttled refresh logic
 - Multi-language UI strings (English, Italiano, Deutsch)
-- Customisable card title, units (W or kW), background image, and update interval
+- Customisable card title, typography, units (W or kW), background image, and update interval
 
 ## Installation
 

@@ -1,7 +1,7 @@
 /**
  * Lumina Energy Card
  * Custom Home Assistant card for energy flow visualization
- * Version: 1.0.2
+ * Version: 1.0.3
  * Tested with Home Assistant 2025.12+
  */
 
@@ -61,12 +61,23 @@ class LuminaEnergyCard extends HTMLElement {
       language: 'en',
       card_title: 'LUMINA ENERGY',
       background_image: '/local/community/lumina-energy-card/lumina_background.jpg',
-      sensor_pv1: 'sensor.solar_production',
-      sensor_daily: 'sensor.daily_production',
-      sensor_bat1_soc: 'sensor.battery_soc',
-      sensor_bat1_power: 'sensor.battery_power',
-      sensor_home_load: 'sensor.home_consumption',
-      sensor_grid_power: 'sensor.grid_power',
+      header_font_size: 16,
+      daily_label_font_size: 12,
+      daily_value_font_size: 20,
+      pv_font_size: 16,
+      battery_soc_font_size: 20,
+      battery_power_font_size: 14,
+      load_font_size: 15,
+      grid_font_size: 15,
+      car_power_font_size: 15,
+      car_soc_font_size: 12,
+      animation_speed_factor: 1,
+      sensor_pv1: '',
+      sensor_daily: '',
+      sensor_bat1_soc: '',
+      sensor_bat1_power: '',
+      sensor_home_load: '',
+      sensor_grid_power: '',
       display_unit: 'kW',
       update_interval: 30
     };
@@ -162,6 +173,26 @@ class LuminaEnergyCard extends HTMLElement {
     const use_kw = display_unit.toUpperCase() === 'KW';
     const title_text = config.card_title || 'LUMINA ENERGY';
 
+    const clampValue = (value, min, max, fallback) => {
+      const num = Number(value);
+      if (!Number.isFinite(num)) {
+        return fallback;
+      }
+      return Math.min(Math.max(num, min), max);
+    };
+
+    const header_font_size = clampValue(config.header_font_size, 12, 32, 16);
+    const daily_label_font_size = clampValue(config.daily_label_font_size, 8, 24, 12);
+    const daily_value_font_size = clampValue(config.daily_value_font_size, 12, 32, 20);
+    const pv_font_size = clampValue(config.pv_font_size, 12, 28, 16);
+    const battery_soc_font_size = clampValue(config.battery_soc_font_size, 12, 32, 20);
+    const battery_power_font_size = clampValue(config.battery_power_font_size, 10, 28, 14);
+    const load_font_size = clampValue(config.load_font_size, 10, 28, 15);
+    const grid_font_size = clampValue(config.grid_font_size, 10, 28, 15);
+    const car_power_font_size = clampValue(config.car_power_font_size, 10, 28, 15);
+    const car_soc_font_size = clampValue(config.car_soc_font_size, 8, 24, 12);
+    const animation_speed_factor = clampValue(config.animation_speed_factor, 0.25, 4, 1);
+
     // Language
     const lang = config.language || 'en';
     const dict_daily = { it: 'PRODUZIONE OGGI', en: 'DAILY YIELD', de: 'TAGESERTRAG' };
@@ -194,8 +225,9 @@ class LuminaEnergyCard extends HTMLElement {
     const getDur = (watts) => {
       const w = Math.abs(watts);
       if (w < 10) return '0s';
-      const duration = 30.0 - (Math.min(w / 6000, 1) * 29.5);
-      return duration.toFixed(2) + 's';
+      const base = 30.0 - (Math.min(w / 6000, 1) * 29.5);
+      const scaled = base / animation_speed_factor;
+      return scaled.toFixed(2) + 's';
     };
 
     const dur_pv1 = getDur(total_pv_w);
@@ -232,13 +264,13 @@ class LuminaEnergyCard extends HTMLElement {
     
     if (pv_sensors.length === 2) {
       pv_text_html = `
-        <text x="${T_SOLAR_X}" y="${T_SOLAR_Y - 10}" transform="${trans_solar}" fill="${C_CYAN}" font-size="16" style="${TxtStyle}">S1: ${this.formatPower(pv1_val, use_kw)}</text>
-        <text x="${T_SOLAR_X}" y="${T_SOLAR_Y + 10}" transform="${trans_solar}" fill="${C_BLUE}" font-size="16" style="${TxtStyle}">S2: ${this.formatPower(pv2_val, use_kw)}</text>
+        <text x="${T_SOLAR_X}" y="${T_SOLAR_Y - 10}" transform="${trans_solar}" fill="${C_CYAN}" font-size="${pv_font_size}" style="${TxtStyle}">S1: ${this.formatPower(pv1_val, use_kw)}</text>
+        <text x="${T_SOLAR_X}" y="${T_SOLAR_Y + 10}" transform="${trans_solar}" fill="${C_BLUE}" font-size="${pv_font_size}" style="${TxtStyle}">S2: ${this.formatPower(pv2_val, use_kw)}</text>
       `;
     } else if (pv_sensors.length > 2) {
-      pv_text_html = `<text x="${T_SOLAR_X}" y="${T_SOLAR_Y}" transform="${trans_solar}" fill="${C_CYAN}" font-size="16" style="${TxtStyle}">${label_pv_tot}: ${this.formatPower(total_pv_w, use_kw)}</text>`;
+      pv_text_html = `<text x="${T_SOLAR_X}" y="${T_SOLAR_Y}" transform="${trans_solar}" fill="${C_CYAN}" font-size="${pv_font_size}" style="${TxtStyle}">${label_pv_tot}: ${this.formatPower(total_pv_w, use_kw)}</text>`;
     } else {
-      pv_text_html = `<text x="${T_SOLAR_X}" y="${T_SOLAR_Y}" transform="${trans_solar}" fill="${C_CYAN}" font-size="16" style="${TxtStyle}">${this.formatPower(total_pv_w, use_kw)}</text>`;
+      pv_text_html = `<text x="${T_SOLAR_X}" y="${T_SOLAR_Y}" transform="${trans_solar}" fill="${C_CYAN}" font-size="${pv_font_size}" style="${TxtStyle}">${this.formatPower(total_pv_w, use_kw)}</text>`;
     }
 
     this.shadowRoot.innerHTML = `
@@ -279,12 +311,12 @@ class LuminaEnergyCard extends HTMLElement {
           <image href="${bg_img}" xlink:href="${bg_img}" x="0" y="0" width="800" height="450" preserveAspectRatio="none" />
           
           <rect x="290" y="10" width="220" height="32" rx="6" ry="6" fill="rgba(0, 20, 40, 0.85)" stroke="#00FFFF" stroke-width="1.5"/>
-          <text x="400" y="32" class="title-text" font-size="16">${title_text}</text>
+          <text x="400" y="32" class="title-text" font-size="${header_font_size}">${title_text}</text>
           
           <g transform="translate(600, 370)">
             <rect x="0" y="0" width="180" height="60" rx="10" ry="10" class="alive-box" />
-            <text x="90" y="23" class="alive-text" style="font-family: sans-serif; text-anchor:middle; font-size:12px; font-weight:normal; letter-spacing: 1px;">${label_daily}</text>
-            <text x="90" y="50" class="alive-text" style="font-family: sans-serif; text-anchor:middle; font-size:20px; font-weight:bold;">${total_daily_kwh} kWh</text>
+            <text x="90" y="23" class="alive-text" style="font-family: sans-serif; text-anchor:middle; font-size:${daily_label_font_size}px; font-weight:normal; letter-spacing: 1px;">${label_daily}</text>
+            <text x="90" y="50" class="alive-text" style="font-family: sans-serif; text-anchor:middle; font-size:${daily_value_font_size}px; font-weight:bold;">${total_daily_kwh} kWh</text>
           </g>
           
           <g transform="${bat_transform}">
@@ -307,15 +339,15 @@ class LuminaEnergyCard extends HTMLElement {
           
           ${pv_text_html}
           
-          <text x="${T_BAT_X}" y="${T_BAT_Y}" transform="${trans_bat}" fill="${C_WHITE}" font-size="20" style="${TxtStyle}">${Math.floor(avg_soc)}%</text>
-          <text x="${T_BAT_X}" y="${T_BAT_Y + 20}" transform="${trans_bat}" fill="${bat_col}" font-size="14" style="${TxtStyle}">${this.formatPower(Math.abs(total_bat_w), use_kw)}</text>
+          <text x="${T_BAT_X}" y="${T_BAT_Y}" transform="${trans_bat}" fill="${C_WHITE}" font-size="${battery_soc_font_size}" style="${TxtStyle}">${Math.floor(avg_soc)}%</text>
+          <text x="${T_BAT_X}" y="${T_BAT_Y + 20}" transform="${trans_bat}" fill="${bat_col}" font-size="${battery_power_font_size}" style="${TxtStyle}">${this.formatPower(Math.abs(total_bat_w), use_kw)}</text>
           
-          <text x="${T_HOME_X}" y="${T_HOME_Y}" transform="${trans_home}" fill="${C_WHITE}" font-size="15" style="${TxtStyle}">${this.formatPower(load, use_kw)}</text>
-          <text x="${T_GRID_X}" y="${T_GRID_Y}" transform="${trans_grid}" fill="${grid_col}" font-size="15" style="${TxtStyle}">${this.formatPower(Math.abs(grid), use_kw)}</text>
+          <text x="${T_HOME_X}" y="${T_HOME_Y}" transform="${trans_home}" fill="${C_WHITE}" font-size="${load_font_size}" style="${TxtStyle}">${this.formatPower(load, use_kw)}</text>
+          <text x="${T_GRID_X}" y="${T_GRID_Y}" transform="${trans_grid}" fill="${grid_col}" font-size="${grid_font_size}" style="${TxtStyle}">${this.formatPower(Math.abs(grid), use_kw)}</text>
           
-          <text x="${T_CAR_X}" y="${T_CAR_Y}" transform="${trans_car}" fill="${C_WHITE}" font-size="15" style="${TxtStyle}">${this.formatPower(car_w, use_kw)}</text>
+          <text x="${T_CAR_X}" y="${T_CAR_Y}" transform="${trans_car}" fill="${C_WHITE}" font-size="${car_power_font_size}" style="${TxtStyle}">${this.formatPower(car_w, use_kw)}</text>
           ${(config.show_car_soc && car_soc !== null) ? `
-            <text x="${T_CAR_X}" y="${T_CAR_Y + 15}" transform="${trans_car}" fill="${config.car_pct_color || '#00FFFF'}" font-size="12" style="${TxtStyle}">${Math.round(car_soc)}%</text>
+            <text x="${T_CAR_X}" y="${T_CAR_Y + 15}" transform="${trans_car}" fill="${config.car_pct_color || '#00FFFF'}" font-size="${car_soc_font_size}" style="${TxtStyle}">${Math.round(car_soc)}%</text>
           ` : ''}
         </svg>
       </ha-card>
@@ -324,7 +356,7 @@ class LuminaEnergyCard extends HTMLElement {
   }
 
   static get version() {
-    return '1.0.2';
+    return '1.0.3';
   }
 }
 

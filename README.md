@@ -1,7 +1,7 @@
 # Lumina Energy Card
 
 [![hacs_badge](https://img.shields.io/badge/HACS-Custom-orange.svg)](https://github.com/custom-components/hacs)
-![Version](https://img.shields.io/badge/version-1.0.2-blue.svg)
+![Version](https://img.shields.io/badge/version-1.0.3-blue.svg)
 
 Limuna Energy Card repository is <https://github.com/ratava/lumina-energy-card>.
 
@@ -34,8 +34,9 @@ Lumina Energy Card is a Home Assistant custom Lovelace card that renders animate
 - Up to six PV sensors with smart per-string or totalised labels
 - Up to four battery systems with SOC averaging and liquid-fill battery visualisation
 - Animated grid, load, PV, battery and EV flows with dynamic colour and speed
-- Optional EV panel with power and SOC display, including custom colour
-- Daily production badge, custom card title, background, and unit selection
+- Adjustable animation speed multiplier (0.25x–4x) and visibility thresholds
+- Optional EV panel with power and SOC display, configurable colour, and typography
+- Daily production badge plus full typography controls for header, PV, battery, load, grid, and EV text
 - Update interval slider (10–60 s, default 30 s) with throttled rendering when editing
 
 ### Installation (EN)
@@ -93,6 +94,17 @@ background_image: /local/community/lumina-energy-card/lumina_background.jpg
 | `language` | string | `en` | Accepts `en`, `it`, or `de` |
 | `display_unit` | string | `kW` | Display values in `W` or `kW` |
 | `update_interval` | number | `30` | Refresh cadence (10–60, step 10) |
+| `animation_speed_factor` | number | `1` | Flow animation multiplier (0.25–4) |
+| `header_font_size` | number | `16` | Typography for the header (12–32 px) |
+| `pv_font_size` | number | `16` | Typography for PV text (12–28 px) |
+| `battery_soc_font_size` | number | `20` | Typography for SOC label (12–32 px) |
+| `battery_power_font_size` | number | `14` | Typography for battery power (10–28 px) |
+| `load_font_size` | number | `15` | Typography for load label (10–28 px) |
+| `grid_font_size` | number | `15` | Typography for grid label (10–28 px) |
+| `car_power_font_size` | number | `15` | Typography for EV power (10–28 px) |
+| `car_soc_font_size` | number | `12` | Typography for EV SOC (8–24 px) |
+| `daily_label_font_size` | number | `12` | Typography for the daily label (8–24 px) |
+| `daily_value_font_size` | number | `20` | Typography for the daily total (12–32 px) |
 | `sensor_pv1` | entity | — | Primary PV sensor (required) |
 | `sensor_daily` | entity | — | Daily production sensor (required) |
 | `sensor_bat1_soc` | entity | — | Battery SOC sensor (required) |
@@ -120,8 +132,9 @@ background_image: /local/community/lumina-energy-card/lumina_background.jpg
 
 ### Changelog (EN)
 
+- **1.0.3 (2025)** – Added animation speed scaling, typography sliders, and inline entity examples in the editor.
+- **1.0.2 (2025)** – Update to base code.
 - **1.0.1 (2025)** – Moved distributable files into `dist/` and aligned manual install docs with new filenames.
-- **1.0.2 (2025)** – Update to base code
 
 ---
 
@@ -136,8 +149,10 @@ Lumina Energy Card è una scheda Lovelace per Home Assistant che offre grafica a
 - Fino a 6 sensori fotovoltaici con etichettatura intelligente
 - Fino a 4 batterie con media SOC e visualizzazione liquida 3D
 - Flussi animati con colori dinamici per rete, casa, FV, batterie ed EV
+- Moltiplicatore di velocità per regolare le animazioni dei flussi (0,25x–4x)
 - Pannello EV opzionale con potenza e SOC personalizzabili
 - Badge produzione giornaliera, titolo, sfondo e unità configurabili
+- Controlli tipografici per titolo, FV, batterie, carichi, rete ed EV
 - Slider intervallo aggiornamento (10–60 s) con blocco degli aggiornamenti durante l'editing
 
 ### Installazione HACS (IT)
@@ -191,8 +206,10 @@ Die Lumina Energy Card zeigt animierte Energieflüsse in Home Assistant, unterst
 - Bis zu 6 PV-Sensoren mit intelligenter Beschriftung
 - Bis zu 4 Batteriesysteme mit SOC-Durchschnitt und kombiniertem Leistungswert
 - Animierte Leitungen für Netz, Haus, PV, Batterie und EV mit Farbcodierung
+- Einstellbarer Animationsfaktor für schnellere oder langsamere Flussvisualisierung (0,25x–4x)
 - Optionales EV-Panel inklusive SOC-Farbe
 - Tagesertrag, Kartentitel, Hintergrund und Einheiten anpassbar
+- Typografie-Regler für Titel, PV, Batterie, Last, Netz und EV-Text
 - Update-Intervall-Regler (10–60 s) verhindert unnötige Aktualisierungen im Editor
 
 ### Installation HACS (DE)

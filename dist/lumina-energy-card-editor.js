@@ -1,7 +1,7 @@
 /**
  * Lumina Energy Card
  * Custom Home Assistant card for energy flow visualization
- * Version: 1.0.2
+ * Version: 1.0.3
  * Tested with Home Assistant 2025.12+
  */
 
@@ -111,7 +111,9 @@ class LuminaEnergyCardEditor extends HTMLElement {
       return fallback;
     }
 
-    const raw = Number(target.value);
+    const rawDetail = ev && ev.detail && ev.detail.value !== undefined ? Number(ev.detail.value) : NaN;
+    const rawTarget = Number(target.value);
+    const raw = Number.isFinite(rawDetail) ? rawDetail : rawTarget;
     const minBound = Number.isFinite(min) ? min : Number(target.min ?? raw);
     const maxBound = Number.isFinite(max) ? max : Number(target.max ?? raw);
     const stepAttr = Number(target.step);
@@ -344,7 +346,35 @@ class LuminaEnergyCardEditor extends HTMLElement {
     ]));
 
     container.appendChild(this._createSlider('Update Interval', 'update_interval', config.update_interval ?? 30, 10, 60, 10, 'seconds'));
+
+    const typographyTitle = document.createElement('div');
+    typographyTitle.className = 'section-title';
+    typographyTitle.textContent = 'Typography';
+    container.appendChild(typographyTitle);
+
+    container.appendChild(this._createSlider('Header Font Size', 'header_font_size', config.header_font_size ?? 16, 12, 32, 1, 'px'));
+    container.appendChild(this._createSlider('Daily Label Font Size', 'daily_label_font_size', config.daily_label_font_size ?? 12, 8, 24, 1, 'px'));
+    container.appendChild(this._createSlider('Daily Value Font Size', 'daily_value_font_size', config.daily_value_font_size ?? 20, 12, 32, 1, 'px'));
+    container.appendChild(this._createSlider('PV Text Font Size', 'pv_font_size', config.pv_font_size ?? 16, 12, 28, 1, 'px'));
+    container.appendChild(this._createSlider('Battery SOC Font Size', 'battery_soc_font_size', config.battery_soc_font_size ?? 20, 12, 32, 1, 'px'));
+    container.appendChild(this._createSlider('Battery Power Font Size', 'battery_power_font_size', config.battery_power_font_size ?? 14, 10, 28, 1, 'px'));
+    container.appendChild(this._createSlider('Load Font Size', 'load_font_size', config.load_font_size ?? 15, 10, 28, 1, 'px'));
+    container.appendChild(this._createSlider('Grid Font Size', 'grid_font_size', config.grid_font_size ?? 15, 10, 28, 1, 'px'));
+    container.appendChild(this._createSlider('Car Power Font Size', 'car_power_font_size', config.car_power_font_size ?? 15, 10, 28, 1, 'px'));
+    container.appendChild(this._createSlider('Car SOC Font Size', 'car_soc_font_size', config.car_soc_font_size ?? 12, 8, 24, 1, 'px'));
     
+    const animationTitle = document.createElement('div');
+    animationTitle.className = 'section-title';
+    animationTitle.textContent = 'Animation';
+    container.appendChild(animationTitle);
+
+    const animationHelper = document.createElement('div');
+    animationHelper.className = 'helper-text';
+    animationHelper.textContent = 'Adjust the animation speed multiplier (0.25x–4x).';
+    container.appendChild(animationHelper);
+
+    container.appendChild(this._createSlider('Animation Speed Factor', 'animation_speed_factor', config.animation_speed_factor ?? 1, 0.25, 4, 0.25, 'x'));
+
     // PV Sensors Section
     const pvTitle = document.createElement('div');
     pvTitle.className = 'section-title';
@@ -356,12 +386,23 @@ class LuminaEnergyCardEditor extends HTMLElement {
     pvHelper.textContent = 'Configure up to 6 PV/solar sensors. Only PV1 is required.';
     container.appendChild(pvHelper);
     
+    const pv1Example = document.createElement('div');
+    pv1Example.className = 'helper-text';
+    pv1Example.textContent = 'Example: sensor.solar_production';
+    container.appendChild(pv1Example);
+
     container.appendChild(this._createEntityPicker('PV Sensor 1 (Required)', 'sensor_pv1', config.sensor_pv1));
     container.appendChild(this._createEntityPicker('PV Sensor 2 (Optional)', 'sensor_pv2', config.sensor_pv2));
     container.appendChild(this._createEntityPicker('PV Sensor 3 (Optional)', 'sensor_pv3', config.sensor_pv3));
     container.appendChild(this._createEntityPicker('PV Sensor 4 (Optional)', 'sensor_pv4', config.sensor_pv4));
     container.appendChild(this._createEntityPicker('PV Sensor 5 (Optional)', 'sensor_pv5', config.sensor_pv5));
     container.appendChild(this._createEntityPicker('PV Sensor 6 (Optional)', 'sensor_pv6', config.sensor_pv6));
+
+    const dailyExample = document.createElement('div');
+    dailyExample.className = 'helper-text';
+    dailyExample.textContent = 'Example: sensor.daily_production';
+    container.appendChild(dailyExample);
+
     container.appendChild(this._createEntityPicker('Daily Production Sensor', 'sensor_daily', config.sensor_daily));
     
     // Battery Sensors Section
@@ -375,7 +416,16 @@ class LuminaEnergyCardEditor extends HTMLElement {
     batHelper.textContent = 'Configure up to 4 batteries. Each battery needs SOC and Power sensors.';
     container.appendChild(batHelper);
     
+    const bat1SocExample = document.createElement('div');
+    bat1SocExample.className = 'helper-text';
+    bat1SocExample.textContent = 'Example SOC: sensor.battery_soc';
+    container.appendChild(bat1SocExample);
     container.appendChild(this._createEntityPicker('Battery 1 SOC', 'sensor_bat1_soc', config.sensor_bat1_soc));
+
+    const bat1PowExample = document.createElement('div');
+    bat1PowExample.className = 'helper-text';
+    bat1PowExample.textContent = 'Example Power: sensor.battery_power';
+    container.appendChild(bat1PowExample);
     container.appendChild(this._createEntityPicker('Battery 1 Power', 'sensor_bat1_power', config.sensor_bat1_power));
     container.appendChild(this._createEntityPicker('Battery 2 SOC (Optional)', 'sensor_bat2_soc', config.sensor_bat2_soc));
     container.appendChild(this._createEntityPicker('Battery 2 Power (Optional)', 'sensor_bat2_power', config.sensor_bat2_power));
@@ -390,7 +440,16 @@ class LuminaEnergyCardEditor extends HTMLElement {
     otherTitle.textContent = 'Other Sensors';
     container.appendChild(otherTitle);
     
+    const loadExample = document.createElement('div');
+    loadExample.className = 'helper-text';
+    loadExample.textContent = 'Example Load: sensor.home_consumption';
+    container.appendChild(loadExample);
     container.appendChild(this._createEntityPicker('Home Load/Consumption', 'sensor_home_load', config.sensor_home_load));
+
+    const gridExample = document.createElement('div');
+    gridExample.className = 'helper-text';
+    gridExample.textContent = 'Example Grid: sensor.grid_power';
+    container.appendChild(gridExample);
     container.appendChild(this._createEntityPicker('Grid Power', 'sensor_grid_power', config.sensor_grid_power));
     
     container.appendChild(this._createSwitch('Invert Grid Values', 'invert_grid', config.invert_grid));
