@@ -3,6 +3,8 @@
 [![hacs_badge](https://img.shields.io/badge/HACS-Custom-orange.svg)](https://github.com/custom-components/hacs)
 ![Version](https://img.shields.io/badge/version-1.0.1-blue.svg)
 
+Limuna Energy Card repository is <https://github.com/ratava/lumina-energy-card>.
+
 ![Lumina Energy Card Background](dist/lumina_background.jpg)
 
 **Language / Lingua / Sprache:** [English](#english) | [Italiano](#italiano) | [Deutsch](#deutsch)

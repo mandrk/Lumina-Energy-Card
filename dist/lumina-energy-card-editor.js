@@ -324,11 +324,11 @@ class LuminaEnergyCardEditor extends HTMLElement {
     container.appendChild(cardSettingsTitle);
     
     container.appendChild(this._createTextField('Card Title', 'card_title', config.card_title || 'LUMINA ENERGY'));
-    container.appendChild(this._createTextField('Background Image Path', 'background_image', config.background_image || '/local/community/Lumina3d-energy-card/lumina_background.jpg'));
+    container.appendChild(this._createTextField('Background Image Path', 'background_image', config.background_image || '/local/community/lumina-energy-card/lumina_background.jpg'));
     
     const bgHelper = document.createElement('div');
     bgHelper.className = 'helper-text';
-    bgHelper.textContent = 'Path to background image (e.g., /local/community/Lumina3d-energy-card/bg.jpg)';
+    bgHelper.textContent = 'Path to background image (e.g., /local/community/lumina-energy-card/bg.jpg)';
     container.appendChild(bgHelper);
     
     container.appendChild(this._createSelect('Language', 'language', config.language || 'en', [

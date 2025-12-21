@@ -1,5 +1,7 @@
 # Lumina Energy Card
 
+Limuna Energy Card repository is <https://github.com/ratava/lumina-energy-card>.
+
 Animated Home Assistant card that visualises PV, battery, grid, load, and EV energy flows in a single dashboard.
 
 ## Highlights

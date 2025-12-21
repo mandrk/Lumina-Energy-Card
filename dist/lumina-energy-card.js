@@ -51,7 +51,7 @@ class LuminaEnergyCard extends HTMLElement {
 
   static async getConfigElement() {
     if (!customElements.get('lumina-energy-card-editor')) {
-      await import('./Lumina3d-energy-card-editor.js');
+      await import('./lumina-energy-card-editor.js');
     }
     return document.createElement('lumina-energy-card-editor');
   }
@@ -60,7 +60,7 @@ class LuminaEnergyCard extends HTMLElement {
     return {
       language: 'en',
       card_title: 'LUMINA ENERGY',
-      background_image: '/local/community/Lumina3d-energy-card/lumina_background.jpg',
+      background_image: '/local/community/lumina-energy-card/lumina_background.jpg',
       sensor_pv1: 'sensor.solar_production',
       sensor_daily: 'sensor.daily_production',
       sensor_bat1_soc: 'sensor.battery_soc',
@@ -157,7 +157,7 @@ class LuminaEnergyCard extends HTMLElement {
     const car_soc = config.sensor_car_soc ? this.getStateSafe(config.sensor_car_soc) : null;
 
     // Display settings
-    const bg_img = config.background_image || '/local/community/Lumina3d-energy-card/lumina_background.jpg';
+    const bg_img = config.background_image || '/local/community/lumina-energy-card/lumina_background.jpg';
     const display_unit = config.display_unit || 'W';
     const use_kw = display_unit.toUpperCase() === 'KW';
     const title_text = config.card_title || 'LUMINA ENERGY';
