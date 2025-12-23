@@ -3,11 +3,11 @@
 [![hacs_badge](https://img.shields.io/badge/HACS-Custom-orange.svg)](https://github.com/custom-components/hacs)
 ![Version](https://img.shields.io/badge/version-1.1.21-blue.svg)
 
-Limuna Energy Card repository is <https://github.com/ratava/lumina-energy-card>.
+Lumina Energy Card repository is <https://github.com/mandrk/Lumina-Energy-Card>.
 
-![Lumina Energy Card Background](dist/lumina_background.jpg)
+![Lumina Energy CardBackgroundd](dist/lumina_background.jpg)
 
-[![Donate](https://img.shields.io/badge/Donate-PayPal-blue.svg?style=for-the-badge&logo=paypal)](https://www.paypal.me/giorgiosalierno)
+[![Donate](https://img.shields.io/badge/Donate-PayPal-blue.svg?style=for-the-badge&logo=paypal)](https://www.paypal.me/mandrk)
 
 
 **Language / Lingua / Sprache / Langue:** [English](#english) | [Italiano](#italiano) | [Deutsch](#deutsch) | [Français](#fran%C3%A7ais)
@@ -18,7 +18,7 @@ Limuna Energy Card repository is <https://github.com/ratava/lumina-energy-card>.
 
 1. Open HACS in Home Assistant and choose **Frontend**.
 1. Click the three-dot menu and select **Custom repositories**.
-1. Paste `https://github.com/ratava/lumina-energy-card`, set the category to **Frontend**, and click **Add**.
+1. Paste `https://github.com/mandrk/Lumina-Energy-Card/`, set the category to **Frontend**, and click **Add**.
 1. Close the dialog, locate **Lumina Energy Card** in the Frontend list, and install it.
 1. Restart Home Assistant if requested, then add the card from the Lovelace visual editor.
 
@@ -54,8 +54,8 @@ Lumina Energy Card is a Home Assistant custom Lovelace card that renders animate
 
 #### Manual Installation (EN)
 
-1. Download `dist/lumina-energy-card.js` from the [latest release](https://github.com/ratava/lumina-energy-card/releases).
-1. Copy the file to `/config/www/community/lumina-energy-card/`.
+1. Download `dist/lumina-energy-card.js` from the [latest release](https://github.com/mandrk/Lumina-Energy-Card/releases Copyleases).
+1. Copy the file communityig/www/community/lumina-energy-card/`.
 1. Place `dist/lumina_background.jpg` in the same directory.
 1. Add the Lovelace resource:
 
