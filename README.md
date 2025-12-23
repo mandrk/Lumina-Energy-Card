@@ -231,9 +231,95 @@ Hinweise:
 
 ### Aperçu (FR)
 
-La sélection de la langue `Français` est désormais disponible dans l'éditeur. Les traductions complètes en français ne sont pas encore fournies ; lorsque `fr` est sélectionné, l'éditeur utilisera par défaut les chaînes en anglais jusqu'à ce que des traductions françaises soient ajoutées.
+La carte Lumina Energy est une carte Lovelace personnalisée pour Home Assistant qui affiche des flux d'énergie animés, agrège les chaînes PV et les batteries, et peut afficher des métriques optionnelles de recharge EV dans une présentation soignée.
 
-Pour l'instant, reportez-vous à la section **English** ci‑dessous pour la documentation complète et les exemples de configuration.
+### Fonctionnalités clés (FR)
+
+- Jusqu'à six capteurs PV avec étiquetage intelligent par chaîne ou totalisé
+- Jusqu'à quatre systèmes de batterie avec moyenne SOC et visualisation par remplissage liquide
+- Flux animés pour réseau, charge, PV, batterie et EV avec couleur dynamique et styles sélectionnables (tirets, points, flèches)
+- Seuil d'animation du réseau configurable (par défaut 100 W) pour supprimer le bruit d'import/export faible
+- Multiplicateur de vitesse d'animation ajustable (-3x à 3x) et contrôles de visibilité par flux
+- Panneau EV optionnel avec affichage de puissance et SOC, couleurs et typographie configurables
+- Badge de production quotidienne et contrôles typographiques complets
+- Options pour inverser polarité batterie et personnaliser couleurs/seuils
+- Support pour un deuxième onduleur / Array 2 (capteurs PV par chaîne et capteur PV total secondaire)
+
+### Installation (FR)
+
+#### HACS (FR)
+
+1. Ouvrez HACS dans Home Assistant et choisissez **Frontend**.
+1. Cliquez sur le menu à trois points et sélectionnez **Custom repositories**.
+1. Collez `https://github.com/ratava/lumina-energy-card`, définissez la catégorie sur **Frontend**, puis cliquez sur **Add**.
+1. Fermez la boîte, trouvez **Lumina Energy Card** dans la liste Frontend et installez-la.
+1. Redémarrez Home Assistant si nécessaire, puis ajoutez la carte depuis l'éditeur Lovelace.
+
+#### Installation manuelle (FR)
+
+1. Téléchargez `dist/lumina-energy-card.js` depuis la [dernière release](https://github.com/ratava/lumina-energy-card/releases).
+1. Copiez le fichier dans `/config/www/community/lumina-energy-card/`.
+1. Placez `dist/lumina_background.jpg` dans le même dossier.
+1. Ajoutez la ressource Lovelace :
+
+```yaml
+lovelace:
+  resources:
+    - url: /local/community/lumina-energy-card/lumina-energy-card.js
+      type: module
+```
+
+1. Redémarrez Home Assistant pour charger la ressource.
+
+### Configuration (FR)
+
+1. Éditez votre tableau de bord et cliquez sur **Add Card**.
+1. Recherchez **Lumina Energy Card**.
+1. Remplissez les champs à l'aide des sélecteurs d'entités et des bascules.
+1. Ajustez l'intervalle de mise à jour (**Update Interval**) selon vos besoins.
+
+Exemple YAML minimal (FR) :
+
+```yaml
+type: custom:lumina-energy-card
+sensor_pv1: sensor.solar_production
+sensor_daily: sensor.daily_production
+sensor_bat1_soc: sensor.battery_soc
+sensor_bat1_power: sensor.battery_power
+sensor_home_load: sensor.home_consumption
+sensor_grid_power: sensor.grid_power
+background_image: /local/community/lumina-energy-card/lumina_background.jpg
+```
+
+### Options (FR)
+
+Les options disponibles correspondent à celles listées dans la section anglaise. Les champs obligatoires incluent typiquement : `sensor_pv1`, `sensor_daily`, `sensor_bat1_soc`, `sensor_bat1_power`, `sensor_home_load`, `sensor_grid_power`. Pour les autres options, référez-vous au tableau `Options (EN)` ci‑dessous.
+
+### Options additionnelles Array 2 (FR)
+
+- `sensor_pv_total_secondary` | entity | — | Capteur total optionnel pour le second onduleur (PV2). Lorsqu'il est fourni, il est inclus dans PV TOT et utilisé comme flux PV secondaire.
+- `sensor_pv_array2_1` .. `sensor_pv_array2_6` | entities | — | Jusqu'à six capteurs par chaîne pour un second array PV (Array 2). Si `show_pv_strings` est activé, ils apparaissent comme lignes séparées.
+- `sensor_daily_array2` | entity | — | Capteur production quotidienne pour Array 2 ; la carte affiche le rendement quotidien combiné = `sensor_daily` + `sensor_daily_array2`.
+- `sensor_home_load_secondary` | entity | — | Capteur de charge domestique optionnel associé à l'onduleur 2 ; utilisé pour calculer HOUSE TOT et INV 2 quand Array 2 est configuré.
+
+### Fond & Dépannage (FR)
+
+- Fond par défaut : `/local/community/lumina-energy-card/lumina_background.jpg` (copiez votre image à côté du fichier JS pour personnaliser).
+- Dimensions recommandées : 800×450 (16:9).
+- Carte manquante : vérifiez que la ressource est ajoutée et videz le cache du navigateur.
+- Zéros de lecture : vérifiez les IDs d'entités et la disponibilité des capteurs.
+- Lenteur de l'éditeur : augmentez `update_interval` ou réduisez la fréquence de rafraîchissement du dashboard.
+
+### Support & Licence (FR)
+
+- Licence : MIT (voir [LICENSE](LICENSE)).
+- Problèmes & demandes de fonctionnalités : soumettez via [GitHub](https://github.com/ratava/lumina-energy-card).
+
+### Changelog (FR)
+
+- **1.1.24 (2025-12-23)** – Ajout du support secondaire PV Array 2 (sélecteurs par chaîne et `sensor_pv_total_secondary`), rendement journalier combiné (`sensor_daily` + `sensor_daily_array2`), charge domestique secondaire (`sensor_home_load_secondary`), `pv_tot_color`, couleurs par ligne HOUSE/INV (`house_total_color`, `inv1_color`, `inv2_color`), support `invert_battery`, options de taille police nom voiture (`car_name_font_size`, `car2_name_font_size`) et mises à jour de l éditeur et du README (EN/IT/DE/FR).
+
+---
 
 ### Background & Troubleshooting (EN)
 
